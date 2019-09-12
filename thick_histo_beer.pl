@@ -16,7 +16,7 @@ while (<IN>) {
    next unless ($#data>2);
    $val=pop @data;
    print OUT "$val\n";
-   if ($val <0) {$bad++;}
+   if ($val <0) {$bad++;$histo[0]++;}
    else {
       for ($i=0; $i<$max; $i++) {
          if (($val >= $i*$bin) and $val < ($i+1) *$bin) {

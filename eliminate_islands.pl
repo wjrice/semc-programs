@@ -38,7 +38,8 @@ while (<IN>) {
       }
    }
 }
-print "\nNumber of micrographs to eliminate: $#list\n";
+my $badmic = $#list+1;
+print "\nNumber of micrographs to eliminate: $badmic\n";
 print "Eliminated $deleted paticles, saved $saved in file $edited\n";
  
 

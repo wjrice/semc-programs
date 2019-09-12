@@ -50,6 +50,7 @@ while (<IN>) {
    $ctf_pack = $data[9];
    $ctf_app = $data[8];
    $ctf_avg = $ctf_pack <= $ctf_app ? $ctf_pack : $ctf_app ; #chooses lowest value
+   if ($ctf_app == 0) {$ctf_avg = $ctf_pack;}
    $ctfdata{$imagename} = $ctf_avg
 }
 close (IN);
