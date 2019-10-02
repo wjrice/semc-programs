@@ -140,6 +140,7 @@ while (<IN>) {
       }
    }
    else { #store the data 
+      if ($#data < $fc) {$fc=$#data;}
       my $file = $data[$fc];
       $file = $micdir . '/' . $file . '.mrc';  #add path and extension
       my $xcoord=$data[$xc];
