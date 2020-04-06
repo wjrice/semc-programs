@@ -3,13 +3,13 @@
 # run in directory containine particles.star and run.out
 # wjr 062617
 #
-my $logfile = 'run.out';
+my $logfile = 'run.err';
 my $partfile = 'particles.star';
 my $edited = 'particles_edited.star';
 
 open (IN,$logfile) or die "cannot read $logfile\n";
 while (<IN>) {
-   if ($_ =~ m/warning: .*\s(.*\.mrc)\./) {
+   if ($_ =~ m/Warning: .*\s(.*\.mrc)\./) {
       push @list,$1;
       print "match $1\n";
    }
