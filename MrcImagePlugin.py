@@ -15,7 +15,7 @@
 # 2010-07-25 William Rice
 
 import struct, sys
-import Image, ImageFile
+from PIL import Image, ImageFile
 
 def isInt(f):
     try:

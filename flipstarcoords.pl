@@ -11,7 +11,7 @@ if ($ARGV[0]) {
    $instar = $ARGV[0];
 }
 else {
-   print "Enter input star file, default $ianstar: ";
+   print "Enter input star file, default $instar: ";
    chomp (my $line = <STDIN>);
    if ($line) {$instar = $line;}
 }

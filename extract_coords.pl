@@ -13,7 +13,7 @@
 #_rln_beamTiltX = pos 29
 #_rln_beamttiltY= pos 30
 #_rlnBeamTiltClass = pos 31 (#32)
-my $in='run_ct10_data_flipped.star';
+my $in='run_data_flipped.star';
 my %info;
 open (IN,$in) or die "no read!";
 mkdir 'temp';

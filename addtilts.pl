@@ -1,8 +1,8 @@
 #! /usr/bin/perl -w
 #
-my $tilts = '../../group_set1.txt';
-my $instar = 'particles.star';
-my $outstar = 'particles_tilt.star';
+my $tilts = '../../groups.txt';
+my $instar = 'run_data.star';
+my $outstar = 'run_data_tilt.star';
 
 open (IN,$tilts) or die "cannot read $tilts\n";
 while (<IN>) {

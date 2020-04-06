@@ -9,7 +9,11 @@ my $edited = 'particles_edited.star';
 
 open (IN,$logfile) or die "cannot read $logfile\n";
 while (<IN>) {
+<<<<<<< Updated upstream
    if ($_ =~ m/Warning: .*\s(.*\.mrc)\./) {
+=======
+   if ($_ =~ m/Warning: .*\s+(.*\.mrc)\./) {
+>>>>>>> Stashed changes
       push @list,$1;
       print "match $1\n";
    }

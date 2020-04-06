@@ -39,10 +39,10 @@ my $micdir = 'micrographs';
 my $ctfdir = 'WarpCtf';
 my %stardata;
 my %ctfdata;
-unless (-e $pickdir) {`mkdir -p $pickdir/$micdir`;}
 print "Enter name of micrographs directory (default $micdir): ";
 chomp ($line = <STDIN>);
 if ($line) {$micdir=$line;}
+unless (-e $pickdir) {`mkdir -p $pickdir/$micdir`;}
 
 open (IN,$starfile) or die "cannot read $starfile\n";
 while (<IN>) {
