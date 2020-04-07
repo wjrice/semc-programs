@@ -1,0 +1,2 @@
+ relion_preprocess --operate_on Extract/ex_cls4_bin1/particles.star --operate_out cistem_particles
+
