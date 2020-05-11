@@ -1,18 +1,28 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 # script to give  agui for making tilt groups from an appion ctf star file
 # allows for filtering based on best CTF fir value
 # allws replacement of enn-a with enn-a-DW
 # write relion 3 starfile output
+
+# requirements: python 2.7 or 3.X
+# 	Tkinter
+# 	numpy
+# 	matplotlib
+#	scikit-learn
 
 # TO DO
 # relion 3.1 output
 # freeplot to plot any colmnn vs any other column
 
 #from tkinter import *
-import tkinter as Tk
-#from PIL import ImageTk, Image
-from tkinter import messagebox
-#from tkinter import filedialog
+try: #python 3
+	import tkinter as Tk
+	from tkinter import messagebox
+	from tkinter import filedialog
+except: #python 2.7
+	import Tkinter as Tk
+	import tkMessageBox as messagebox
+	import tkFileDialog as filedialog
 
 import re
 import numpy as np
@@ -210,7 +220,7 @@ class Window:
 			self.outfile_relion3_button['state'] = 'disabled'
 
 	def selectfile(self):
-		f = Tk.filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("star files", "*.star"), ("all files", "*.*")))
+		f = filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("star files", "*.star"), ("all files", "*.*")))
 		self.filelabel.delete(0,Tk.END)
 		self.filelabel.insert(0,f)
 		
