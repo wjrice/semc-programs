@@ -24,6 +24,7 @@ except: #python 2.7
 	import tkMessageBox as messagebox
 	import tkFileDialog as filedialog
 
+import os
 import re
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,11 +39,13 @@ class Window:
 	def __init__(self):
 		self.root = Tk.Tk()
 		self.root.title('Tilt Group Wrangler')
-		self.root.geometry("800x400")
+		self.root.geometry("800x500")
 
 		self.filename=Tk.StringVar()
 		self.outstar=Tk.StringVar()
 		self.mtffile=Tk.StringVar()
+		self.cspfile=Tk.StringVar()
+		self.passthrufile=Tk.StringVar()
 		self.starlabels = []
 		self.stardata = []
 		self.maxctfindex = -1
@@ -111,15 +114,97 @@ class Window:
 		self.outfile_relion31_button.grid(row=8, column=3, padx=10, pady=10)
 		self.mtffile.trace('w', self.toggle_state)    #this should toggle the state of the read and write  button depending on this variable	
 
+		self.cryosparc_button = Tk.Button(self.root, text="Export to cryosparc data", command=self.cryosparc_export, background='teal')
+		self.cryosparc_button.grid(row=9, column=1, padx=10, pady=10)
 		self.quit_button = Tk.Button(self.root, text="QUIT", bg="red", command=quit)
-		self.quit_button.grid(row=9, column=1, padx=10, pady=10, columnspan=1)
+		self.quit_button.grid(row=10, column=1, padx=10, pady=10, columnspan=1)
 
 
 # all the functions
+	def cryosparc_export(self):
+		try:
+			import dataset  #NEEDED for reading and writing cryosparc cs files
+		except:
+			response=messagebox.showerror("ERROR", "Cannot import required cryosparc library")
+		else:
+			self.cswindow = Tk.Toplevel()
+			self.cswindow.title("Cryosparc Export")
+			self.cswindow.geometry("800x400")
+
+			self.readcsp_label = Tk.Label(self.cswindow, text="Input .cs particle file")
+			self.readcsp_label.grid(row=1, column=3)
+			self.readcsp_button = Tk.Button(self.cswindow, text="Select file", command=self.selectcsfile)
+			self.readcsp_button.grid(row=1, column=1, padx=10, pady=10)
+			self.readcsp_entry = Tk.Entry(self.cswindow, textvariable = self.cspfile, width=60, borderwidth=5)
+			self.readcsp_entry.grid(row=1, column=2)
+
+			self.readpassthru_label = Tk.Label(self.cswindow, text="Input .cs passthrough file")
+			self.readpassthru_label.grid(row=2, column=3)
+			self.readpassthru_button = Tk.Button(self.cswindow, text="Select file", command=self.selectpassthrufile)
+			self.readpassthru_button.grid(row=2, column=1, padx=10, pady=10)
+			self.readpassthru_entry = Tk.Entry(self.cswindow, textvariable = self.passthrufile, width=60, borderwidth=5)
+			self.readpassthru_entry.grid(row=2, column=2)
+
+
+
+			self.readcsp_button= Tk.Button(self.cswindow, text="Add groups", command=self.readcspfile)
+			self.readcsp_button.grid(row=3, column=1, padx=10, pady=10)
+
+			self.writecsp_label = Tk.Label(self.cswindow, text="Output filename")
+			self.writecsp_label.grid(row=4,column=1, padx=10, pady=10)
+			self.writecsp_entry = Tk.Entry(self.cswindow, width=30, borderwidth=5)
+			self.writecsp_entry.grid(row=4, column=2)
+
+			self.writecsp_button = Tk.Button(self.cswindow, text="Write file", command=self.writecspfile)
+			self.writecsp_button.grid(row=4, column=3)
+
+			
+	def writecspfile(self):
+		try:
+			import dataset  #NEEDED for reading and writing cryosparc cs files
+		except:
+			response=messagebox.showerror("ERROR", "Cannot import required cryosparc library")
+		else:
+			outfile = self.writecsp_entry.get()
+			self.particleset.to_file(outfile)
+
+	def readcspfile(self):
+		try:
+			import dataset  #NEEDED for reading and writing cryosparc cs files
+		except:
+			response=messagebox.showerror("ERROR", "Cannot import required cryosparc library")
+		else:
+			self.particleset = dataset.Dataset().from_file(self.cspfile.get())
+			self.passthruset = dataset.Dataset().from_file(self.passthrufile.get())
+			groupdata={}
+			for i, dataline in enumerate(self.stardata):
+				filename = os.path.basename(dataline[self.micnameindex])
+				groupdata[filename] = self.grouplabels[i]
+			keys = groupdata.keys()
+			if 'location/micrograph_path' in self.passthruset.data.keys():
+				for i in range(len(self.particleset.data)):
+					filename = self.passthruset.data['location/micrograph_path'][i]
+					basename =os.path.basename(filename)
+					if basename in keys:
+						self.particleset.data['ctf/exp_group_id'][i] = groupdata[basename]
+					else:
+						print ("error, no key found for " + basename)	
+
+	def selectpassthrufile(self):
+		f = filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("cs files", "*.cs"), ("all files", "*.*")))
+		self.readpassthru_entry.delete(0,Tk.END)
+		self.readpassthru_entry.insert(0,f)
+
+	def selectcsfile(self):
+		f = filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("cs files", "*.cs"), ("all files", "*.*")))
+		self.readcsp_entry.delete(0,Tk.END)
+		self.readcsp_entry.insert(0,f)
+
 	def relion31write(self):
-		pass
+		response=messagebox.showinfo("Sorry", "Not yet implemented!")
 	def freeplot(self):
-		pass
+		response=messagebox.showinfo("Sorry", "Not yet implemented!")
+
 	def relion3write(self):
 		starfile=self.outfile_entry.get()	
 		try:
