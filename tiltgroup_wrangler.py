@@ -182,13 +182,19 @@ class Window:
 				groupdata[filename] = self.grouplabels[i]
 			keys = groupdata.keys()
 			if 'location/micrograph_path' in self.passthruset.data.keys():
+				numbad=0
 				for i in range(len(self.particleset.data)):
 					filename = self.passthruset.data['location/micrograph_path'][i]
 					basename =os.path.basename(filename)
 					if basename in keys:
 						self.particleset.data['ctf/exp_group_id'][i] = groupdata[basename]
-					else:
-						print ("error, no key found for " + basename)	
+					else: #no appion ctf data for this micrograph, put them all in their own tilt group
+						#print ("error, no key found for " + basename)	
+						self.particleset.data['ctf/exp_group_id'][i] = len(self.grouplabels) +1 
+						numbad += 1
+			if (numbad >0):
+				response=messagebox.showwarning("WARNING", "Number of particles without good appion ctf data:\n" + str(numbad))
+#			print ("number of missing particles in keys: " + str(numbad))
 
 	def selectpassthrufile(self):
 		f = filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("cs files", "*.cs"), ("all files", "*.*")))
