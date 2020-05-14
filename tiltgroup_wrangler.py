@@ -167,6 +167,7 @@ class Window:
 		else:
 			outfile = self.writecsp_entry.get()
 			self.particleset.to_file(outfile)
+			response=messagebox.showinfo("Success", "Wrote " + outfile)
 
 	def readcspfile(self):
 		try:
@@ -176,6 +177,13 @@ class Window:
 		else:
 			self.particleset = dataset.Dataset().from_file(self.cspfile.get())
 			self.passthruset = dataset.Dataset().from_file(self.passthrufile.get())
+			if 'ctf/exp_group_id' in self.passthruset.data.keys():
+				self.particleset = self.passthruset
+				response=messagebox.showinfo("IMPORTANT","CTF information is in the passthrough file.\n Replace that file in cryosparc directory")
+			elif 'ctf/exp_group_id' in self.particleset.data.keys():
+				response=messagebox.showinfo("IMPORTANT","CTF information is in the particleset file.\n Replace that file in cryosparc directory")
+ 			else:
+				response=messagebox.showerror("ERROR","No CTF information found! Cannot group")
 			groupdata={}
 			for i, dataline in enumerate(self.stardata):
 				filename = os.path.basename(dataline[self.micnameindex])
@@ -192,9 +200,11 @@ class Window:
 						#print ("error, no key found for " + basename)	
 						self.particleset.data['ctf/exp_group_id'][i] = len(self.grouplabels) +1 
 						numbad += 1
-			if (numbad >0):
-				response=messagebox.showwarning("WARNING", "Number of particles without good appion ctf data:\n" + str(numbad))
-#			print ("number of missing particles in keys: " + str(numbad))
+				if (numbad >0):
+					response=messagebox.showwarning("WARNING", "Number of particles without good appion ctf data:\n" + str(numbad))
+			else:
+				response=messagebox.showerror("ERROR","No Micrograph filename information found! Cannot group")
+
 
 	def selectpassthrufile(self):
 		f = filedialog.askopenfilename(initialdir="./", title="Select a file", filetypes=(("cs files", "*.cs"), ("all files", "*.*")))
