@@ -15,7 +15,14 @@ while (<IN>) {
 }
 close (IN);
 
-open (IN,"goodparticles_BoxNet2_20180602.star") or die "no read goodparticles_BoxNet2_20180602.star\n";
+my @warpfiles=glob("goodparticles_Box*.star");
+my $warpfile=$warpfiles[0];
+print "Warp picks found:\n"; foreach $f (@warpfiles) {print "$f\n";} ; print"\n";
+print "Enter warpfile (default $warpfile): ";
+chomp ($line=<STDIN>);
+if ($line) {$warpfile=$line;}
+ 
+open (IN,$warpfile) or die "Cannot read $warpfile \n";
 while (<IN>) {
    my @data=split(" ",$_);
    if ($#data<3) {
