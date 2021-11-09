@@ -1,7 +1,7 @@
 #! /usr/bin/perl -w
 #
 my $warpset='goodparticles_BoxNet2_20180602.star';
-my $csparcset='good_particles.star';
+my $csparcset='particles_selected.star';
 my $outstar='good_for_import.star';
 
 if ($ARGV[0]) {

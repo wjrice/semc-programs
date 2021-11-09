@@ -18,9 +18,9 @@ close (IN);
 my @warpfiles=glob("goodparticles_Box*.star");
 my $warpfile=$warpfiles[0];
 print "Warp picks found:\n"; foreach $f (@warpfiles) {print "$f\n";} ; print"\n";
-print "Enter warpfile (default $warpfile): ";
-chomp ($line=<STDIN>);
-if ($line) {$warpfile=$line;}
+#print "Enter warpfile (default $warpfile): ";
+#chomp ($line=<STDIN>);
+#if ($line) {$warpfile=$line;}
  
 open (IN,$warpfile) or die "Cannot read $warpfile \n";
 while (<IN>) {
