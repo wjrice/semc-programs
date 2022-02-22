@@ -10,18 +10,20 @@ use strict;
 # Also works for exported cryosparc files, where the original imprt was not attached to a micrograph set
 #my $in1 = '../set1/goodparticles_BoxNet2_20180602.star';
 #my $in2 = '../set2/goodparticles_BoxNet2_20180602.star';
+#
+# fixd dec 20 2021 for cryosparc3.31
 
-unless ($#ARGV >1) {die "Usage: addback.pl <warpfile.star> <converted_cpsarcfile.star> <output_csparcfile.star>\n";}
+unless ($#ARGV >0) {die "Usage: addback.pl <warpfile.star> <converted_cpsarcfile.star>\n";}
 my $in1 = $ARGV[0];
 my $runfile=$ARGV[1];
-my $outfile=$ARGV[2];
+my $outfile= $runfile . ".temp"; ###$ARGV[2];
 
 my %coordinate_x;
 my %coordinate_y;
 my %micrographname;
 my ($imnamecol,$micnamecol,$xcol,$ycol);
 
-open (IN,$in1) or die "no read\n";
+open (IN,$in1) or die "cannot read $in1\n";
 while (<IN>) {
    my @data=split(" ",$_);
    if ($#data<4) {
@@ -31,9 +33,12 @@ while (<IN>) {
       if (m/_rlnImageName/) {$imnamecol = fixnum(pop @data);}
    }
    else {
-    $coordinate_x{$data[$imnamecol]} = $data[$xcol];
-    $coordinate_y{$data[$imnamecol]} = $data[$ycol];
-    $micrographname{$data[$imnamecol]} = $data[$micnamecol];
+      my @data2 = split(/\@/,$data[$imnamecol]);  # eliminate problem of varying leading zeroes
+      $data2[0] = int($data2[0]);
+      $data[$imnamecol] = join("\@",@data2);
+      $coordinate_x{$data[$imnamecol]} = $data[$xcol];
+      $coordinate_y{$data[$imnamecol]} = $data[$ycol];
+      $micrographname{$data[$imnamecol]} = $data[$micnamecol];
    }
 }
 close (IN);
@@ -57,9 +62,12 @@ open (IN,$runfile) or die "cannot read $runfile\n";
 open (OUT,">$outfile") or die "cannot write $outfile\n";
 
 my $lastnum=1;
+while (<IN>) { #copy the relion3.1 optics table, if it exists
+   print OUT;
+   last if (m/data_particles/);
+}
+
 while (<IN>) {
-   #s/Particles/particles/;
-   #s/imported\/J\d+/particles/;
    s/J\d+\/imported/particles/;
    chomp;
    my @data=split(" ",$_);
@@ -80,21 +88,27 @@ while (<IN>) {
          $lastnum=-1;
       }
       my $imname=$data[$imnamecol];
-      $imname = "0" . $imname;
+      my @data2 = split(/\@/,$imname);
+      $data2[0]=int($data2[0]);  # eliminate problem of varying leading zeroes
+      $imname = join("\@",@data2);
       #
       unless (defined($coordinate_x{$imname})) {
-         $imname = "0" . $imname;
-         print "fixing $imname\n";
+         $imname =~ s/\@particles\/\d+_/\@particles\//;  # fix for cryospac 3.3.1 which appends a random mnay digit number to 
+#                                                             the start of filenames
+         $_ =~ s/\@particles\/\d+_/\@particles\//;  # need to fix the written-out line here
+        # print "fixed $imname\n";
       }
       unless (defined($coordinate_x{$imname})) {
-         $imname =~ s/^..//;
          print "still broken $imname\n";
       }
       my $newdata=join(" ",($coordinate_x{$imname},$coordinate_y{$imname},$micrographname{$imname}));
       print OUT "$_ $newdata\n";
    }
 }
-
+close (IN);
+close (OUT);
+rename ($runfile, "$runfile.orig") or die "Can't rename $runfile to $runfile.orig: $|";
+rename ($outfile, $runfile) or die "Can't rename $outfile to $runfile: $|";
          
 
 
@@ -102,7 +116,7 @@ while (<IN>) {
 sub fixnum  {
    my $num =$_[0];
    $num =~ s/#//;
-   $num-= 1;
+   $num -= 1;
    return $num;
 }
 

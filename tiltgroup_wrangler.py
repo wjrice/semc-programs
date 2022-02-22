@@ -27,8 +27,11 @@ except: #python 2.7
 import os
 import re
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+import matplotlib
+matplotlib.use("TkAgg")  #use TKinter framework
+import matplotlib.pyplot as plt
+
 
 rln_ctfstring = '_rlnCtfMaxResolution'
 rln_micstring = '_rlnMicrographName'
@@ -182,7 +185,7 @@ class Window:
 				response=messagebox.showinfo("IMPORTANT","CTF information is in the passthrough file.\n Replace that file in cryosparc directory")
 			elif 'ctf/exp_group_id' in self.particleset.data.keys():
 				response=messagebox.showinfo("IMPORTANT","CTF information is in the particleset file.\n Replace that file in cryosparc directory")
- 			else:
+			else:
 				response=messagebox.showerror("ERROR","No CTF information found! Cannot group")
 			groupdata={}
 			for i, dataline in enumerate(self.stardata):
@@ -237,7 +240,7 @@ class Window:
 					f.write(header + " #" + str(i) + "\n")
 					i += 1
 				if self.tiltxindex >= 0:
-					f.write("_rlnBeamTiltClass " + str(i) + "\n")
+					f.write("_rlnBeamTiltClass #" + str(i) + "\n")
 	
 				if 1==1:  # zero out the tilt values, keep as string for simplicity
 					for i in range (len(self.stardata)):
