@@ -14,6 +14,7 @@ open (OUT,">$outfile") or die "cannot write $outfile\n";
 
 while (<IN>) {
    $_ =~ s/\@J\d+\/imported\/\d+_/\@particles\//;
+   $_ =~ s/\@J\d+\/extract\/\d+_/\@particles\//;
    $_ =~ s/ J\d+\/imported\/\d+_/ Micrographs\//;
    print OUT;
 }
