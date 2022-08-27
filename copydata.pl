@@ -17,13 +17,33 @@ unless (-e "/hpc/cryoem_data/$dir/$session") {
 }
 
 while (1) {
-   `rsync -ar --progress /data/cryoem/cryoemdata/frames/$session/rawdata/* /hpc/cryoem_data/$dir/$session/frames/.`;
-   `rsync -ar --progress /data/cryoem/cryoemdata/leginon/$session/rawdata/*DW.mrc /hpc/cryoem_data/$dir/$session/aligned/.`;
-   print "copying frames, aligned for session $session to /hpc/cryoem_data/$dir/$session\n";
-   if (-e "/data/cryoem/cryoemdata/appion/$session/warp") {
-      `rsync -ar --progress /data/cryoem/cryoemdata/appion/$session/warp /hpc/cryoem_data/$dir/$session/processed/.`;
-      print "copying warp for session $session to /hpc/cryoem_data/$dir/$session\n";
+   print "copying frames for session $session to /hpc/cryoem_data/$dir/$session\n";
+   my $frameout = `rsync -ar --progress /data/cryoem/cryoemdata/frames/$session/rawdata/* /hpc/cryoem_data/$dir/$session/frames/.`;
+   if ($frameout =~ m/xfr#/) {
+      print "New frames were copied in the last iteration\n";
    }
+   else {
+      print "No new frames were copied in the last iteration\n";
+   }
+   print "copying aligned images for session $session to /hpc/cryoem_data/$dir/$session\n";
+   my $alout = `rsync -ar --progress /data/cryoem/cryoemdata/leginon/$session/rawdata/*DW.mrc /hpc/cryoem_data/$dir/$session/aligned/.`;
+   if ($alout =~ m/xfr#/) {
+      print "New aligned images were copied in the last iteration\n";
+   }
+   else {
+      print "No new aligned images were copied in the last iteration\n";
+   }
+   if (-e "/data/cryoem/cryoemdata/appion/$session/warp") {
+      print "copying warp for session $session to /hpc/cryoem_data/$dir/$session\n";
+      my $warpout = `rsync -ar --progress /data/cryoem/cryoemdata/appion/$session/warp /hpc/cryoem_data/$dir/$session/processed/.`;
+      if ($warpout =~ m/xfr#/) {
+         print "New warp images were copied in the last iteration\n";
+      }
+      else {
+         print "No new warp images were copied in the last iteration\n";
+      }
+   }
+   print "\n";
    sleep 300;
 }
  
