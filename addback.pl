@@ -12,7 +12,9 @@ use strict;
 #my $in2 = '../set2/goodparticles_BoxNet2_20180602.star';
 #
 # fixd dec 20 2021 for cryosparc3.31
-
+# WJR, NYU Langone
+#
+#
 unless ($#ARGV >0) {die "Usage: addback.pl <warpfile.star> <converted_cpsarcfile.star>\n";}
 my $in1 = $ARGV[0];
 my $runfile=$ARGV[1];

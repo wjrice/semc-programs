@@ -3,6 +3,8 @@
 # script to remove the extra junk that cryosparc adds
 # replaces imported micrograph path with Micrographs
 # replaces imported particles path with paticles
+# WJR NYU Langone
+#
 
 unless (defined $ARGV[0]) {
    die "Usage: remove_junk.pl <star file>\n";

@@ -16,6 +16,10 @@ while (<IN>) {
 close (IN);
 
 my @warpfiles=glob("goodparticles_Box*.star");
+if (defined $ARGV[0] and $ARGV[0] =~ m/all/) {
+   @warpfiles=glob("allparticles_Box*.star");
+}
+
 my $warpfile=$warpfiles[0];
 print "Warp picks found:\n"; foreach $f (@warpfiles) {print "$f\n";} ; print"\n";
 #print "Enter warpfile (default $warpfile): ";
