@@ -5,10 +5,10 @@
 #
 # handles all optics groups
 # wjr 072321
-#
+# modified 1/1/23 for z-axis data
 use warnings;
 use strict;
-my ($filein,$fileout,%opticsdata,@data,@extra_rln,$save,$pix_index,$x_index,$y_index,$opticsname_index,$optics_index,$dimension_index,$first,$opticsgroup);
+my ($filein,$fileout,%opticsdata,@data,@extra_rln,$save,$pix_index,$x_index,$y_index,$z_index, $opticsname_index,$optics_index,$dimension_index,$first,$opticsgroup);
 
 if (defined $ARGV[0]) {
    $filein = shift @ARGV;
@@ -32,10 +32,10 @@ while (<IN>) {
       @data = split(" ",$_);
       last;
    }
-   s/rlnImagePixelSize/rlnPixelSize/ ;
+   s/rlnImagePixelSize/rlnDetectorPixelSize/ ;
    my @data = split(" ",$_);
    push @extra_rln,$data[0];
-   if (m/rlnPixelSize/) {
+   if (m/rlnDetectorPixelSize/) {
       $pix_index = $#extra_rln;
    }
    if (m/rlnOpticsGroup\s/) {
@@ -121,6 +121,7 @@ while (<IN>) {
    }
    if (m/_rlnOriginXAngst/) {$x_index = $datanum-1;}
    if (m/_rlnOriginYAngst/) {$y_index = $datanum-1;}
+   if (m/_rlnOriginZAngst/) {$z_index = $datanum-1;}
    $_ =~ s/Angst//;
    if (m/rlnOpticsGroup/) {
       $optics_index = $datanum - 1; 
@@ -136,9 +137,13 @@ for (my $i=0; $i<=$#extra_rln; $i++) {
    print OUT "$extra_rln[$i] #" . $datanum . "\n";
    $datanum++;
 }
+print OUT "_rlnMagnification #" . $datanum . "\n";
+$datanum++;
 
-if ($x_index > $optics_index) {$x_index -= 1;}
-if ($y_index > $optics_index) {$y_index -= 1;}
+#if ($x_index > $optics_index) {$x_index -= 1;}
+#if ($y_index > $optics_index) {$y_index -= 1;}
+#if ($z_index > $optics_index) {$z_index -= 1;}
+print " z y z indices $x_index $y_index $z_index\n";
 
 while (<IN>) {
    my @old_data = split(" ",$_);
@@ -146,13 +151,14 @@ while (<IN>) {
       @old_data = split(" ",$save);
    }
    $opticsgroup = splice(@old_data,$optics_index,1);
-   $old_data[$x_index] /= $data[$pix_index] ;
+   $old_data[$x_index] /= $data[$pix_index] ; 
    $old_data[$y_index] /= $data[$pix_index] ;
+   $old_data[$z_index] /= $data[$pix_index] ;
    for (my $i=0; $i <= $#old_data; $i++) {
       print OUT "$old_data[$i] ";
    }
    for (my $i=0; $i<=$#data; $i++) {
       print OUT "$opticsdata{$opticsgroup}[$i] ";
    }
-   print OUT "\n";
+   print OUT "10000 \n";
 } 
