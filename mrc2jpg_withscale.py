@@ -1,13 +1,15 @@
 #! /usr/bin/python
 
 #import Image,ImageFile,ImageDraw,ImageFont,MrcImagePlugin
-import MrcImagePlugin
 from PIL import Image,ImageFile,ImageDraw,ImageFont
 import sys
 
 if not sys.argv[3:]:
     print "Usage: mrc2jpg_withscale.py INPUT OUTPUT apixel"
     sys.exit(1)
+
+sys.path.insert(1, '/data/cryoem/software/scripts')
+import MrcImagePlugin
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
@@ -39,11 +41,11 @@ if apix >0:  #0 apix means don't draw the line
     barcolor=0
     backcolor=255
     default_font=ImageFont.load_default()
-    fontsize=16
+    fontsize=64
     #draw bar and text on top of while rectangle for clarity
     draw=ImageDraw.Draw(im)
     draw.rectangle((xstart-20,ystart-20,xend+20,yend+20),fill=backcolor)
-    draw.line((xstart,ystart)+(xend,yend),fill=barcolor,width=2)
+    draw.line((xstart,ystart)+(xend,yend),fill=barcolor,width=4)
     draw.text((xstart,ytext),text,font=default_font,fill=barcolor)
     del draw
 

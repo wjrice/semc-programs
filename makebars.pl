@@ -1,13 +1,12 @@
 #! /usr/bin/perl -w
-# needs IMOD environment loaded to work
-my @files = glob("*e?n-?.mrc");
-#my @files = glob("*.mrc");
-my $mydir = "scalebar";
+#my @files = glob("*e?n-?.mrc");
+my @files = glob("*.mrc");
+my $mydir = "png";
 my $set=0;
 
 unless (-e $mydir) {mkdir $mydir;}
-`ln -s ../mrc2jpg_withscale.py .`;
-`ln -s ../MrcImagePlugin.py .`;
+#`ln -s ../mrc2jpg_withscale.py .`;
+#`ln -s ../MrcImagePlugin.py .`;
 if ($ARGV[0]) {
    $apix = $ARGV[0];
    $set=1;
@@ -21,7 +20,7 @@ unless ($set) {
    $fileout = $file;
    $fileout =~ s/mrc/png/;
    print "$file $apix\n";
-   `./mrc2jpg_withscale.py $file $mydir/$fileout $apix`;
+   `/data/cryoem/software/scripts//mrc2jpg_withscale.py $file $mydir/$fileout $apix`;
 }
 
 
