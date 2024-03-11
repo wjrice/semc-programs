@@ -18,6 +18,7 @@ unless (-e "/hpc/cryoem_data/$dir/$session") {
 
 while (1) {
    print "copying frames for session $session to /hpc/cryoem_data/$dir/$session\n";
+   #my $frameout = `rsync -ar --progress /data/cryoem/cryoemdata/frames/$session/rawdata/* bigpurple-dm.nyumc.org:/gpfs/data/cryoem_data/$dir/$session/frames/.`;
    my $frameout = `rsync -ar --progress /data/cryoem/cryoemdata/frames/$session/rawdata/* /hpc/cryoem_data/$dir/$session/frames/.`;
    if ($frameout =~ m/xfr#/) {
       print "New frames were copied in the last iteration\n";
@@ -26,6 +27,7 @@ while (1) {
       print "No new frames were copied in the last iteration\n";
    }
    print "copying aligned images for session $session to /hpc/cryoem_data/$dir/$session\n";
+   #my $alout = `rsync -ar --progress /data/cryoem/cryoemdata/leginon/$session/rawdata/*DW.mrc bigpurple-dm.nyumc.org:/gpfs/data/cryoem_data/$dir/$session/aligned/.`;
    my $alout = `rsync -ar --progress /data/cryoem/cryoemdata/leginon/$session/rawdata/*DW.mrc /hpc/cryoem_data/$dir/$session/aligned/.`;
    if ($alout =~ m/xfr#/) {
       print "New aligned images were copied in the last iteration\n";
@@ -35,6 +37,7 @@ while (1) {
    }
    if (-e "/data/cryoem/cryoemdata/appion/$session/warp") {
       print "copying warp for session $session to /hpc/cryoem_data/$dir/$session\n";
+      #my $warpout = `rsync -ar --progress /data/cryoem/cryoemdata/appion/$session/warp bigpurple-dm.nyumc.org:/gpfs/data/cryoem_data/$dir/$session/processed/.`;
       my $warpout = `rsync -ar --progress /data/cryoem/cryoemdata/appion/$session/warp /hpc/cryoem_data/$dir/$session/processed/.`;
       if ($warpout =~ m/xfr#/) {
          print "New warp images were copied in the last iteration\n";
@@ -44,7 +47,7 @@ while (1) {
       }
    }
    print "\n";
-   sleep 300;
+   sleep 30;
 }
  
  
