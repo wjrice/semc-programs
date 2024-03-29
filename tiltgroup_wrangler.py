@@ -209,6 +209,7 @@ class Window:
                         p1 = re.compile(r'^\d+_')
                         p2 = re.compile(r'_BoxNet2_.*mrcs$')
                         p3 = re.compile(r'.mrcs$')
+                        p5 = re.compile(r'_frames.mrc$')
                         cs_values = {}
                         
                         for i in range(len(self.particleset.data)):
@@ -217,6 +218,7 @@ class Window:
                                 basename = p1.sub('',basename)  # eliminate annoying random digits that cryosparc may have added
                                 basename = p2.sub('.mrc',basename) # eliminate Warp info from stackname if it is there
                                 basename = p3.sub('.mrc',basename) # eliminate mrcs from stack name in case it is there
+                                basename = p5.sub('-a-DW.mrc',basename) # if frames aligned in Relion instead of appion, replace the frames with -a-DW 
                                 cs = self.particleset.data['ctf/cs_mm'][i]
                                 try:
                                         cs_values[cs] += 1

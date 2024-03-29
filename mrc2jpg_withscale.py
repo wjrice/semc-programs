@@ -41,7 +41,8 @@ if apix >0:  #0 apix means don't draw the line
     barcolor=0
     backcolor=255
     default_font=ImageFont.load_default()
-    fontsize=64
+    #fontsize=64
+    fontsize=256
     #draw bar and text on top of while rectangle for clarity
     draw=ImageDraw.Draw(im)
     draw.rectangle((xstart-20,ystart-20,xend+20,yend+20),fill=backcolor)

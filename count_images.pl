@@ -33,7 +33,8 @@ if (defined $ARGV[3]) {
    $hostname = $ARGV[3];
 }
 
-my $dbh = DBI -> connect('dbi:mysql:database=leginondb;host=10.150.168.11;port=3306;mysql_compression=1','usr_object','NYULMC123');
+my $pw = 'mypassword';
+my $dbh = DBI -> connect('dbi:mysql:database=leginondb;host=10.150.168.11;port=3306;mysql_compression=1','usr_object',$pw);
 
 #my $sessionid = $dbh->selectrow_array("select DEF_id from SessionData where name = '$session_name'");
 #print "session ID is $sessionid\n";

@@ -7,13 +7,15 @@
 # wjr 06-03-2023
 #
 use DBI;
+my $user = 'usr_object';  # leginon db user
+my $pw = 'mypassword'; # leginon database password
 
 my $bad_session_name = "NA";  # default bad session name
 print "Enter name for session(s) to hide (default $bad_session_name): ";
 chomp (my $line=<STDIN>);
 if ($line) {$bad_session_name = $line;}
 
-my $dbh = DBI -> connect('dbi:mysql:database=leginondb;host=10.150.38.162;port=3306;mysql_compression=1','usr_object','NYULMC123');
+my $dbh = DBI -> connect('dbi:mysql:database=leginondb;host=10.150.38.162;port=3306;mysql_compression=1',$user,$pw);
 my $sql = "update SessionData set hidden=1 where comment = ?";
 my $command=$sql;
 $command =~ s/\?/\'$bad_session_name\'/;
