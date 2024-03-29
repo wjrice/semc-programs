@@ -1,0 +1,1 @@
+while true; do rsync -havr --progress /kriosk3/serialem/24jan24y_frames /data/cryoem/cryoemdata/appion/24jan24y/serialem/. ; rsync -havr --progress /kriosk3/serialem/24jan24y*tomo*mdoc /data/cryoem/cryoemdata/appion/24jan24y/serialem/.; rsync -havr --progress /kriosk3/serialem/24jan24y*tomo*log /data/cryoem/cryoemdata/appion/24jan24y/serialem/. ; sleep 60; done
